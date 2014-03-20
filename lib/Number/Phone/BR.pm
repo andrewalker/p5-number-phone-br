@@ -4,15 +4,8 @@ use Number::Phone::BR::Areas qw/code2name mobile_phone_digits_by_area/;
 extends 'Number::Phone';
 with 'Number::Phone::BR::Role::CustomConstructor';
 
-has country => (
-    is => 'ro',
-    default => sub { 'BR' },
-);
-
-has country_code => (
-    is => 'ro',
-    default => sub { 55 },
-);
+sub country { 'BR' }
+sub country_code { 55 }
 
 has subscriber    => ( is => 'ro' );
 
