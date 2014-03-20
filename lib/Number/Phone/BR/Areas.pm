@@ -1,6 +1,7 @@
 package Number::Phone::BR::Areas;
 use warnings;
 use strict;
+use utf8;
 use base 'Exporter';
 
 our @EXPORT_OK = qw/
@@ -83,10 +84,13 @@ sub code2name { $TABLE{ "$_[0]" } }
 sub mobile_phone_digits_by_area {
     my ($area) = @_;
 
-    my $current_year = 1900 + (localtime(time()))[5];
+    my $current_year = _get_current_year();
 
     # as of today, in these area codes, all mobile phones have 9 digits:
-    my %nine_digits = map { $_ => 1 } qw/11 12 13 14 15 16 17 18 e 19/;
+    my %nine_digits = map { $_ => 1 } qw/
+        11 12 13 14 15 16 17 18 19
+        21 22 24 27 28
+    /;
 
     return 9 if $nine_digits{$area};
 
@@ -96,8 +100,8 @@ sub mobile_phone_digits_by_area {
         2016, [ qw/41 42 43 44 45 46 47 48 49 51 53 54 55 61 62 63 64 65 66 67 68 69/ ],
     );
 
-    for my $year (keys %codes_by_year) {
-        last if ($current_year <= $year);
+    for my $year (sort keys %codes_by_year) {
+        last if $current_year <= $year;
 
         for (@{ $codes_by_year{$year} }) {
             $nine_digits{$_} = 1;
@@ -108,5 +112,7 @@ sub mobile_phone_digits_by_area {
 
     return 8;
 }
+
+sub _get_current_year { 1900 + (localtime(time()))[5] }
 
 1;
