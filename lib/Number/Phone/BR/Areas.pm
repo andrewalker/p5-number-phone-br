@@ -4,6 +4,8 @@ use strict;
 use utf8;
 use base 'Exporter';
 
+# VERSION
+
 our @EXPORT_OK = qw/
     code2name
     mobile_phone_digits_by_area
@@ -116,3 +118,82 @@ sub mobile_phone_digits_by_area {
 sub _get_current_year { 1900 + (localtime(time()))[5] }
 
 1;
+
+__END__
+
+=pod
+
+=encoding utf-8
+
+=head1 NAME
+
+Number::Phone::BR::Areas
+
+=head1 DESCRIPTION
+
+Utilities to handle local areas (prefixes and names) for Brazilian telephone numbers.
+
+=head1 METHODS
+
+All of these methods are exported upon request:
+
+=head2 mobile_phone_digits_by_area($code)
+
+=head3 Arguments:
+
+=over 4
+
+=item *
+
+$code: the code of the area (DDD)
+
+=back
+
+=head3 Return value:
+
+=over 4
+
+=item *
+
+Integer 8 or 9, according to the area, based on current date.
+
+=back
+
+Brazil mobile phones are migrating to 9 digits. Not all areas have migrated,
+but they will by the end of 2016. This function returns whether a given area
+has 8 or 9 digits for its mobile phone numbers.
+
+=head2 code2name($code)
+
+=head3 Arguments:
+
+=over 4
+
+=item *
+
+$code: the code of the area (DDD)
+
+=back
+
+=head3 Return value:
+
+=over 4
+
+=item *
+
+The name of the area.
+
+=back
+
+Returns the name of the region of a given code.
+
+=head1 AUTHOR
+
+André Walker <andre@andrewalker.net>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by André Walker.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.

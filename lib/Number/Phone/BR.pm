@@ -1,8 +1,11 @@
 package Number::Phone::BR;
+# ABSTRACT: Brazilian phone numbers
 use Moo;
 use Carp qw/confess/;
 use Number::Phone::BR::Areas qw/code2name mobile_phone_digits_by_area/;
 extends 'Moo::Object', 'Number::Phone';
+
+# VERSION
 
 sub country { 'BR' }
 sub country_code { 55 }
@@ -131,3 +134,125 @@ sub is_corporate { }
 sub is_government { }
 
 1;
+
+__END__
+
+=pod
+
+=encoding utf-8
+
+=head1 NAME
+
+Number::Phone::BR - Brazilian phone numbers
+
+=head1 SYNOPSIS
+
+    # valid phone
+    my $phone = Number::Phone::BR->new('(19) 3333-3333');
+    say $phone->areaname;   # SP - Região Metropolitana de Campinas
+    say $phone->subscriber; # 33333333
+    say $phone->is_fixed_line ? "It's fixed!" : "It's mobile!"; # It's fixed
+
+    # invalid phone:
+    my $phone = Number::Phone::BR->new('xxx');
+    # throws exception: "Not a valid Brazilian phone number: xxx", with stack
+    # trace.
+
+=head1 DESCRIPTION
+
+This module is based on L<Number::Phone>. It implements most important features
+defined there.
+
+=head1 INCOMPATIBILITIES WITH NUMBER::PHONE
+
+L<Number::Phone> requires the subclass to return undef from the constructor
+when the number is not valid. We think this is poorly designed, and not
+compatible with most modern Perl libraries in CPAN today. Additionally, we're
+using L<Moo>, and we'd have to make ugly hacks to make the constructor behave
+like that. The same would've happened if we were using Moose. Seems logical to
+break compatibility on this point, and throw an exception when the number is
+not valid.
+
+=head1 METHODS
+
+=head2 country()
+
+The country of the phone: 'BR'.
+
+=head2 country_code()
+
+The country code of the phone: 55.
+
+=head2 subscriber()
+
+The subscriber part of the phone number.
+
+=head2 areacode()
+
+The area code of the phone number (DDD).
+
+=head2 areaname()
+
+Gets the name of the region to which the areacode belongs.
+
+=head2 is_mobile()
+
+Boolean. Is the phone a mobile phone?
+
+=head2 is_valid()
+
+Boolean. Is the phone a valid number?
+
+=head2 is_fixed_line()
+
+Boolean. Is the phone a fixed line?
+
+=head1 NOT IMPLEMENTED
+
+Number::Phone defines the following methods, which are not implemented in this
+class:
+
+=head2 is_tollfree()
+
+=head2 is_network_service()
+
+=head2 is_allocated()
+
+=head2 is_in_use()
+
+=head2 is_geographic()
+
+=head2 is_pager()
+
+=head2 is_ipphone()
+
+=head2 is_isdn()
+
+=head2 is_specialrate()
+
+=head2 is_adult()
+
+=head2 is_international()
+
+=head2 is_personal()
+
+=head2 is_corporate()
+
+=head2 is_government()
+
+=head1 SEE ALSO
+
+L<Number::Phone>
+
+=head1 AUTHOR
+
+André Walker <andre@andrewalker.net>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by André Walker.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=for Pod::Coverage BUILD BUILDARGS
