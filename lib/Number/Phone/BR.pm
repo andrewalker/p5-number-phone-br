@@ -1,8 +1,7 @@
 package Number::Phone::BR;
 use Moo;
 use Number::Phone::BR::Areas qw/code2name mobile_phone_digits_by_area/;
-extends 'Number::Phone';
-with 'Number::Phone::BR::Role::CustomConstructor';
+extends 'Moo::Object', 'Number::Phone';
 
 sub country { 'BR' }
 sub country_code { 55 }
@@ -16,12 +15,16 @@ has is_mobile     => ( is => 'ro' );
 has is_valid      => ( is => 'ro' );
 has is_fixed_line => ( is => 'ro' );
 
+has _original_number => ( is => 'ro' );
+
 sub BUILDARGS {
     my ($class, $number) = @_;
     my ($areacode, $subscriber);
 
+    my %args = ( _original_number => $number );
+
     my $number_sane = _sanitize_number($number)
-      or return {};
+      or return \%args;
 
     $number_sane =~ s{ \( ([0-9]+) \) }{}x;
 
@@ -37,20 +40,30 @@ sub BUILDARGS {
     }
 
     my $areaname = code2name($areacode)
-      or return {};
+      or return \%args;
 
     my $is_mobile     = _validate_mobile( $areacode, $subscriber );
     my $is_fixed_line = $is_mobile ? 0 : _validate_fixed_line( $subscriber );
     my $is_valid      = $is_mobile || $is_fixed_line;
 
-    return $is_valid ? {
-        areacode      => $areacode,
-        areaname      => $areaname,
-        subscriber    => $subscriber,
-        is_mobile     => $is_mobile,
-        is_fixed_line => $is_fixed_line,
-        is_valid      => $is_valid,
-    } : {};
+    %args = (%args,
+        areacode         => $areacode,
+        areaname         => $areaname,
+        subscriber       => $subscriber,
+        is_mobile        => $is_mobile,
+        is_fixed_line    => $is_fixed_line,
+        is_valid         => $is_valid,
+    ) if $is_valid;
+
+    return \%args;
+}
+
+sub BUILD {
+    my $self = shift;
+
+    # Breaks compat with Number::Phone
+    $self->is_valid
+      or die "Not a valid Brazilian phone number: " . $self->_original_number;
 }
 
 sub _sanitize_number {

@@ -12,7 +12,8 @@ use Number::Phone;
     ok(!$obj->isa('Number::Phone::StubCountry::BR'), 'obj is not from the stub class');
 }
 
-{
+SKIP: {
+    skip 'We decided to break compatibility with upstream on invalid numbers', 1;
     my $obj = Number::Phone->new('+55 123');
     ok(!defined $obj, 'invalid phone is not defined');
 }
