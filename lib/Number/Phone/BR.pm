@@ -1,5 +1,6 @@
 package Number::Phone::BR;
 use Moo;
+use Carp qw/confess/;
 use Number::Phone::BR::Areas qw/code2name mobile_phone_digits_by_area/;
 extends 'Moo::Object', 'Number::Phone';
 
@@ -63,7 +64,7 @@ sub BUILD {
 
     # Breaks compat with Number::Phone
     $self->is_valid
-      or die "Not a valid Brazilian phone number: " . $self->_original_number;
+      or confess "Not a valid Brazilian phone number: " . $self->_original_number;
 }
 
 sub _sanitize_number {
