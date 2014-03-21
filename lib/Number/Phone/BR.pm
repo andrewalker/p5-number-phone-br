@@ -1,8 +1,9 @@
 package Number::Phone::BR;
-use Moo;
+use Number::Phone::BR::Moo;
 use Number::Phone::BR::Areas qw/code2name mobile_phone_digits_by_area/;
 extends 'Number::Phone';
-with 'Number::Phone::BR::Role::CustomConstructor';
+
+generate_custom_constructor();
 
 sub country { 'BR' }
 sub country_code { 55 }
