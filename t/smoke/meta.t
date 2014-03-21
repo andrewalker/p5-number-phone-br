@@ -8,7 +8,6 @@ use Number::Phone::BR;
 my $class = 'Number::Phone::BR';
 my $obj   = $class->new('19 3214 1234');
 
-ok $class->does('Number::Phone::BR::Role::CustomConstructor'), 'does CustomConstructor role';
 ok $class->isa('Number::Phone'), 'isa Number::Phone';
 
 ok $obj->can('is_allocated'), 'can is_allocated';
