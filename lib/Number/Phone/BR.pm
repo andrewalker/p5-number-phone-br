@@ -30,9 +30,10 @@ sub BUILDARGS {
     my $number_sane = _sanitize_number($number)
       or return \%args;
 
+    ($areacode) = $number_sane =~ m{ \( ([0-9]+) \) }x;
     $number_sane =~ s{ \( ([0-9]+) \) }{}x;
 
-    if ( $areacode = $1 ) {
+    if ( $areacode ) {
         $areacode =~ s/^0//;
         $subscriber = $number_sane;
     }
